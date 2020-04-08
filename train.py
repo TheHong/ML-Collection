@@ -5,47 +5,57 @@ from model import define_discriminator, define_generator, define_gan
 
 
 # train pix2pix models
-def train(d_model, g_model, gan_model, dataset, n_epochs=100, n_batch=1):
-    # determine the output square shape of the discriminator
-    n_patch = d_model.output_shape[1]
-    # unpack dataset
-    trainA, trainB = dataset
-    # calculate the number of batches per training epoch
-    bat_per_epo = int(len(trainA) / n_batch)
-    # calculate the number of training iterations
-    n_steps = bat_per_epo * n_epochs
-    # manually enumerate epochs
-    for i in range(n_steps):
-        # select a batch of real samples
-        [X_realA, X_realB], y_real = generate_real_samples(dataset, n_batch, n_patch)
-        # generate a batch of fake samples
-        X_fakeB, y_fake = generate_fake_samples(g_model, X_realA, n_patch)
-        # update discriminator for real samples
-        d_loss1 = d_model.train_on_batch([X_realA, X_realB], y_real)
-        # update discriminator for generated samples
-        d_loss2 = d_model.train_on_batch([X_realA, X_fakeB], y_fake)
-        # update the generator
-        g_loss, _, _ = gan_model.train_on_batch(X_realA, [y_real, X_realB])
-        # summarize performance
-        print('>%d, d1[%.3f] d2[%.3f] g[%.3f]' % (i+1, d_loss1, d_loss2, g_loss))
-        # summarize model performance
-        if (i+1) % (bat_per_epo * 10) == 0:
-            summarize_performance(i, g_model, dataset)
+def train(discriminator, generator, gan, dataset, n_epochs=100, n_batch=1):
+	"""
+	In paper, n_epochs=200 and n_batch=1.
+	Dataset contain two np.arrays: the source images and the target images
+	source images are always real
+	target images can be real or fake
+	"""
+	# Get length of the discriminator output square
+	patch_len = discriminator.output_shape[1]
+
+	# calculate the number of batches per training epoch
+	batch_per_epoch = int(len(dataset[0]) / n_batch)
+
+	# calculate the number of training iterations
+	n_iter = batch_per_epoch * n_epochs
+
+	# manually enumerate epochs
+	for i in range(n_iter):
+		# Select a batch of real samples
+		[source, target_real], label_real = generate_real_samples(dataset, n_batch, patch_len)
+
+		# Generate a batch of fake samples
+		target_fake, label_fake = generate_fake_samples(generator, source, patch_len)
+
+		# Update discriminator for real and generated samples
+		d_loss1 = discriminator.train_on_batch([source, target_real], label_real) # Desire label_real
+		d_loss2 = discriminator.train_on_batch([source, target_fake], label_fake) # Desire label_fake
+
+		# Update the generator
+		g_loss, _, _ = gan.train_on_batch(source, [label_real, target_real]) # Desire label_real and target_real
+
+		# summarize performance
+		print('>%d, d1[%.3f] d2[%.3f] g[%.3f]' % (i+1, d_loss1, d_loss2, g_loss))
+		if (i+1) % (batch_per_epoch * 10) == 0:
+			summarize_performance(i, generator, dataset)
+
 
 if __name__ == "__main__":
-    # load image data
-    dataset = load_real_samples('../maps_256.npz')
-    print('Loaded', dataset[0].shape, dataset[1].shape)
+	# load image data
+	dataset = load_real_samples('../maps_256.npz')
+	print('Loaded', dataset[0].shape, dataset[1].shape)
 
-    # define input shape based on the loaded dataset
-    image_shape = dataset[0].shape[1:]
+	# define input shape based on the loaded dataset
+	image_shape = dataset[0].shape[1:]
 
-    # define the models
-    d_model = define_discriminator(image_shape)
-    g_model = define_generator(image_shape)
+	# define the models
+	discriminator = define_discriminator(image_shape)
+	generator = define_generator(image_shape)
 
-    # define the composite model
-    gan_model = define_gan(g_model, d_model, image_shape)
-    
-    # train model
-    # train(d_model, g_model, gan_model, dataset)
+	# define the composite model
+	gan = define_gan(generator, discriminator, image_shape)
+	
+	# train model
+	train(discriminator, generator, gan, dataset)
