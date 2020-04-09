@@ -1,4 +1,4 @@
-import matplotlib.plt as plt
+import matplotlib.pyplot as plt
 import numpy as np
 
 from keras.models import load_model
@@ -51,7 +51,7 @@ def test_on_img(model_path, file_path):
 	print('Loaded', src_image.shape)
 
 	# load model
-	model = load_model('model_109600.h5')
+	model = load_model(get_path(model_path))
 
 	# generate image from source
 	gen_image = model.predict(src_image)
@@ -64,6 +64,7 @@ def test_on_img(model_path, file_path):
 	plt.axis('off')
 	plt.show()
 
+
 if __name__ == "__main__":
-	test_training_img('results/model_109600.h5')
-	test_on_img('results/model_109600.h5', 'satellite.jpg')
+	# test_on_training_img('../models/model_109600.h5')
+	test_on_img('../models/model_109600.h5', 'satellite.jpg')

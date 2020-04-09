@@ -1,6 +1,6 @@
 import os
 import numpy as np
-import matplotlib.plt as plt
+import matplotlib.pyplot as plt
 from keras.preprocessing.image import img_to_array, load_img
 
 from utils import get_path
@@ -17,7 +17,7 @@ def load_one_image(filename, size=(256,256)):
 	pixels = (pixels - 127.5) / 127.5
 
 	# reshape to 1 sample
-	pixels = expand_dims(pixels, 0)
+	pixels = np.expand_dims(pixels, 0)
 
 	return pixels
 
@@ -84,10 +84,12 @@ def summarize_performance(step, generator, dataset, n_samples=3):
 	Generate samples and save as a plot and save the model
 	"""
 
-	is not os.path.isdir("results"):
+	if not os.path.isdir("results"):
 		os.makedirs("results")
+	if not os.path.isdir("../models"):
+		os.makedirs("../models")
 	plot_name = 'results/plot_%06d.png' % (step+1)
-	model_name = 'results/model_%06d.h5' % (step+1)
+	model_name = '../models/model_%06d.h5' % (step+1)
 
 	# select a sample of input images and fake samples
 	[X_realA, X_realB], _ = generate_real_samples(dataset, n_samples, 1)

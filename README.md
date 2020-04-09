@@ -1,7 +1,10 @@
 # cGAN
 
 Based on https://machinelearningmastery.com/how-to-develop-a-pix2pix-gan-for-image-to-image-translation/.
+
 Paper is: https://arxiv.org/pdf/1611.07004.pdf
+
+Data from: http://efrosgans.eecs.berkeley.edu/pix2pix/datasets/maps.tar.gz
 
 ## The Task
 - Image sizes: 256x256

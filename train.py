@@ -1,6 +1,8 @@
 
-from helpers import summarize_performance
-from load import load_real_samples, generate_real_samples, generate_fake_samples
+import numpy as np
+
+from helpers import summarize_performance, \
+	load_real_samples, generate_real_samples, generate_fake_samples
 from model import define_discriminator, define_generator, define_gan
 
 
@@ -37,7 +39,14 @@ def train(discriminator, generator, gan, dataset, n_epochs=100, n_batch=1):
 		g_loss, _, _ = gan.train_on_batch(source, [label_real, target_real]) # Desire label_real and target_real
 
 		# summarize performance
-		print('>%d, d1[%.3f] d2[%.3f] g[%.3f]' % (i+1, d_loss1, d_loss2, g_loss))
+		print(">{0} ({1}%), d1[{2}] d2[{3}] g[{4}]".format(
+			i + 1,
+			np.round((i + 1) / float(n_iter), 1),
+			np.round(d_loss1, 3),
+			np.round(d_loss2, 3),
+			np.round(g_loss, 3),
+		))
+
 		if (i+1) % (batch_per_epoch * 10) == 0:
 			summarize_performance(i, generator, dataset)
 
