@@ -1,4 +1,5 @@
 # cGAN
+Implementation of a conditional generative adverserial network to translate between satellite image and Google maps image. This implementation was done as part of my undergraduate thesis in developing Sim2real Methods for Urban Search and Rescue Robots.
 
 Based on https://machinelearningmastery.com/how-to-develop-a-pix2pix-gan-for-image-to-image-translation/.
 
