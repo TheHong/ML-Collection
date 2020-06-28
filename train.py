@@ -3,7 +3,7 @@ import numpy as np
 
 from helpers import summarize_performance, \
 	load_real_samples, generate_real_samples, generate_fake_samples
-from model import get_discriminator, get_generator, get_gan
+from cgan import get_discriminator, get_generator, get_gan
 
 
 # train pix2pix models
