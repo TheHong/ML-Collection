@@ -3,7 +3,7 @@ import numpy as np
 
 from helpers import summarize_performance, \
 	load_real_samples, generate_real_samples, generate_fake_samples
-from model import define_discriminator, define_generator, define_gan
+from model import get_discriminator, get_generator, get_gan
 
 
 # train pix2pix models
@@ -60,11 +60,11 @@ if __name__ == "__main__":
 	image_shape = dataset[0].shape[1:]
 
 	# define the models
-	discriminator = define_discriminator(image_shape)
-	generator = define_generator(image_shape)
+	discriminator = get_discriminator(image_shape)
+	generator = get_generator(image_shape)
 
 	# define the composite model
-	gan = define_gan(generator, discriminator, image_shape)
+	gan = get_gan(generator, discriminator, image_shape)
 	
 	# train model
 	train(discriminator, generator, gan, dataset)
