@@ -38,6 +38,11 @@ The discriminator and generator are trained using different losses:
 #### Procedure
 One epoch is one run through the batches. With batch size of 1 and 1097 training images, there will be 1097 iterations per epoch.
 
+## Running the code
+1. Download the dataset from \[[1](#sources)\]
+1. Run setup.py to generate npz file.
+1. Run train.py to train a cGAN. Model checkpoints and intermediate results would be generated.
+1. Run test.py to test the cGAN.
 
 ## <a name="sources"></a>Sources
 \[1\] http://efrosgans.eecs.berkeley.edu/pix2pix/datasets/maps.tar.gz

@@ -49,8 +49,8 @@ def show_samples(filename, n_samples=3):
     """Shows samples of satellite and their corresponding map images
 
     Args:
-            filename (str): Path to the npz file.
-            n_samples (int, optional): Number of samples to display. Defaults to 3.
+        filename (str): Path to the npz file.
+        n_samples (int, optional): Number of samples to display. Defaults to 3.
     """
     filename = get_path(filename)
 

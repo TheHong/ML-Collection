@@ -20,7 +20,7 @@ def get_discriminator(image_shape):
     Returns:
         keras.models.Model: Compiled Keras model object
     """
-	# Weight initialization
+    # Weight initialization
     init = RandomNormal(stddev=0.02)
 
     # Input
@@ -212,7 +212,7 @@ def get_gan(generator, discriminator, image_shape):
     # Connect the source input and generator output to the discriminator input
     discriminator_output = discriminator([source_img, generator_output])
 
-    # The loss is used to uupdate the generator
+    # The loss is used to update the generator
     model = Model(source_img, [discriminator_output, generator_output])
     model.compile(
         loss=['binary_crossentropy', 'mae'],
