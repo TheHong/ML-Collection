@@ -44,15 +44,15 @@ def train(discriminator, generator, gan, dataset, n_epochs=100, n_batch=1):
         g_loss, _, _ = gan.train_on_batch(source, [label_real, target_real])
 
         # summarize performance
-        print(">{} ({}%), d1[{}] d2[{}] g[{}]".format(
+        print(">{} ({:.1f}%), d1[{}] d2[{}] g[{}]".format(
             i + 1,
-            np.round((i + 1) / float(n_iter), 1),
+            (i + 1) / float(n_iter) * 100,
             np.round(d_loss1, 3),
             np.round(d_loss2, 3),
             np.round(g_loss, 3),
         ))
 
-        if (i+1) % (batch_per_epoch * 10) == 0:
+        if (i+1) % (n_iter // 10) == 0:
             summarize_performance(i, generator, dataset)
 
 

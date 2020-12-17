@@ -9,7 +9,7 @@ from helpers import load_real_samples, load_one_image
 # plot source, generated and target images
 
 
-def plot_images(src_img, gen_img, tar_img):
+def plot_images(src_img, gen_img, tar_img, fig_size=(18, 18*3)):
     images = np.vstack((src_img, gen_img, tar_img))
 
     # scale from [-1,1] to [0,1]
@@ -26,6 +26,8 @@ def plot_images(src_img, gen_img, tar_img):
         plt.imshow(images[i])
         # show title
         plt.title(titles[i])
+    fig = plt.gcf()
+    fig.set_size_inches(fig_size[0], fig_size[1])
     plt.show()
 
 
@@ -48,8 +50,8 @@ def test_on_training_img(model_path):
     plot_images(source_img, gen_image, target_img)
 
 
-def test_on_img(model_path, file_path):
-    src_image = load_one_image('sample_satellite_img.jpg')
+def test_on_img(model_path, file_path="sample_satellite_img.jpg"):
+    src_image = load_one_image(file_path)
     print('Loaded', src_image.shape)
 
     # load model
