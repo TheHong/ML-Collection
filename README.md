@@ -2,7 +2,7 @@
 __Implementation of a conditional generative adverserial network (cGAN)__ to translate between satellite images and Google Maps images. This implementation was done as part of my undergraduate thesis in developing sim2real methods for urban search and rescue robots.
 
 ## The Task
-The task is to translate between satellite images and Google Maps images. The data used is from \[[1](#sources)\].
+The task is to translate between satellite images and Google Maps images. The code is adapted from \[[0](#sources)\]. The data used is from \[[1](#sources)\]. 
 
 For the initial investigation, I am translating from satellite to map images:
 
@@ -45,6 +45,8 @@ One epoch is one run through the batches. With batch size of 1 and 1097 training
 1. Run test.py to test the cGAN.
 
 ## <a name="sources"></a>Sources
+\[0\] https://machinelearningmastery.com/how-to-develop-a-pix2pix-gan-for-image-to-image-translation/
+
 \[1\] http://efrosgans.eecs.berkeley.edu/pix2pix/datasets/maps.tar.gz
 
 \[2\] I. J. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley,
