@@ -56,8 +56,9 @@ def get_descriptions_as_list(descriptions):
     return all_description_list
 
 def get_max_length(descriptions):
-	lines = get_descriptions_as_list(descriptions)
-	return max(len(d.split()) for d in lines)
+    lines = get_descriptions_as_list(descriptions)
+    return max(len(d.split()) for d in lines)
+
 
 def create_tokenizer(descriptions):
     # Combine all the descriptions in the dict into a list
@@ -70,74 +71,57 @@ def create_tokenizer(descriptions):
     return tokenizer
 
 
-# Create sequences of images, input sequences and output words for an image
-def create_sequences(tokenizer, max_length, descriptions, features, vocab_size):
+def create_sequences_for_one(img_feature, description_list, tokenizer, max_length, vocab_size):
     """
-    For each image, create a sequence consisting of the image, input words, and expected output word.
-    These will be sorted in three seperate arrays: X_img, X_txt, y
+    For a certain image, create sequences based on the image and its corresponding descriptions.
+    One sequence consists of the image, input words, and expected output word.
+    These will be stored in order in three seperate arrays: X_img, X_txt, y.
+    So for an image description that has 10 words, there will be 10 sequences for that image-description pair
+    So, for an image that has 5 descriptions, all the sequences corresponding to the 5 image-description pair are stored in the three arrays
     """
+    X_img, X_txt, y_word = [], [], []
 
-    X_img, X_txt, y = [], [], []
+    for description in description_list:
+        seq = tokenizer.texts_to_sequences([description])[0]  # Encode sequence into list of int
+        # split one sequence into multiple X,y pairs
+        for i in range(len(seq)-1):
+            # split into input and output pair
+            input = seq[:i+1]  # From first word to current word
+            output = seq[i+1]  # The next word
 
+            # Pad input sequence
+            in_seq = keras_sequence.pad_sequences([input], maxlen=max_length)[0]
+            X_txt.append(in_seq)
+
+            # Encode output sequence
+            out_seq = keras_utils.to_categorical([output], num_classes=vocab_size)[0]
+            y_word.append(out_seq)
+
+            # Store the image feature corresponding to that description
+            X_img.append(img_feature)
+            
+    return np.array(X_img), np.array(X_txt), np.array(y_word)
+
+
+def create_sequences_for_all(features, descriptions, tokenizer, max_length, vocab_size):
+    X_img, X_txt, y_word = [], [], []
     for name, description_list in tqdm(descriptions.items()):
-        for description in description_list:
-            seq = tokenizer.texts_to_sequences([description])[0]  # Encode sequence into list of int
-            # split one sequence into multiple X,y pairs
-            for i in range(len(seq)-1):
-                # split into input and output pair
-                input = seq[:i+1]  # From first word to current word
-                output = seq[i+1]  # The next word
-
-                # Pad input sequence
-                in_seq = keras_sequence.pad_sequences([input], maxlen=max_length)[0]
-
-                # Encode output sequence
-                out_seq = keras_utils.to_categorical([output], num_classes=vocab_size)[0]
-
-                # Store
-                X_img.append(features[name][0])
-                X_txt.append(in_seq)
-                y.append(out_seq)
-
-    # return np.array(X_img), np.array(X_txt), np.array(y)
-    return X_img, X_txt, y
+        img_feature = features[name][0]
+        new_sequences = create_sequences_for_one(img_feature, description_list, tokenizer, max_length, vocab_size)
+        X_img.extend(new_sequences[0])
+        X_txt.extend(new_sequences[1])
+        y_word.extend(new_sequences[2])
+    return np.array(X_img), np.array(X_txt), np.array(y_word)
 
 
-def load_ds(ds_names_file_path, verbose=False):
-    """ Uses file paths from config.py """
-    def _print(str):
-        if verbose: 
-            print(str)
+def word_for_id(integer, tokenizer):
+    """ Finds the word that corresponds to the id """
+    for word, index in tokenizer.word_index.items():
+        if index == integer:
+            return word
+    return None
 
-    # Load the names in the dataset
-    ds_names = load_image_names(ds_names_file_path)
-    _print(f'Dataset: {len(ds_names)}')
 
-    # Load descriptions (dict[img_name: list[description_str]])
-    descriptions = load_descriptions(C.PROCESSED_TEXT_FILE_PATH, ds_names)
-    max_length = get_max_length(descriptions)
-    _print(f'Descriptions: train={len(descriptions)}')
-
-    # Load features (dict[img_name: feature_vector])
-    features = load_features(C.FEATURES_FILE_PATH, ds_names)
-    _print(f'Image Features: train={len(features)}')
-
-    # Create tokenizer
-    tokenizer = create_tokenizer(descriptions)
-    vocab_size = get_vocab_size(tokenizer)
-    _print(f"Vocabulary Size = {vocab_size}")
-
-    # Create sequences to be used to fit the model
-    X_img, X_txt, y = create_sequences(
-        tokenizer, 
-        max_length, 
-        descriptions, 
-        features, 
-        vocab_size
-    )
-
-    return X_img, X_txt, y, vocab_size, max_length
-
-if __name__ == "__main__":
-    # Load the dataset from the training dataset (6K points)
-    load_ds(C.trs_names_file_path, verbose=True)
+def get_description_from_output(output):
+    # Process the description to remove start and end tokens
+    return output.lower().replace(f"{START_TOKEN.lower()} ", "").replace(f" {END_TOKEN.lower()}", "") 

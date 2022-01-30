@@ -6,3 +6,4 @@ This repository contains a collection of ML applications using various ML techni
 | ML Application | ML Model | Description|
 | :-------: | :-------: | ----- |
 | Image Translation | cGAN | Trained conditional generative adverserial networks to translate between satellite images and Google Maps images. |
+| Image Captioning | VGG+LSTM+NN | Coming soon... |

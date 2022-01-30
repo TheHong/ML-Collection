@@ -14,3 +14,4 @@ DATA_FOLDER = "data"
 MODELS_FOLDER = "models"
 FEATURES_FILE_PATH = os.path.join(DATA_FOLDER, "image_captioning_vgg_features.pkl")
 PROCESSED_TEXT_FILE_PATH = os.path.join(DATA_FOLDER, "image_captioning_descriptions.txt")
+TOKENIZER_PATH = os.path.join(MODELS_FOLDER, "image_captioning_tokenizer.pkl")

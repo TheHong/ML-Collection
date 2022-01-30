@@ -4,11 +4,10 @@ import os
 import pickle
 from tqdm import tqdm
 import string
-import keras.applications.vgg16 as keras_vgg
-import keras.preprocessing.image as keras_image
-from keras.models import Model
 
 import config as C
+import model
+
 
 def prepare_image_data(image_dir):
     """
@@ -23,22 +22,15 @@ def prepare_image_data(image_dir):
 
     # Remove last layer (which is VGG's classification layer)
     print("Loading VGG16 =======================")
-    original_vgg = keras_vgg.VGG16()
-    vgg = Model(inputs=original_vgg.inputs, outputs=original_vgg.layers[-2].output)
+    vgg = model.get_vgg_model()
     print(vgg.summary())
 
     # Extract features
     features = {}
     print("This will take a while. . . ======================")
     for name in tqdm(os.listdir(image_dir)):
-        # Load and process image
-        image = keras_image.load_img(os.path.join(image_dir, name), target_size=(224, 224))  # Resizing to the preferred input size
-        image = keras_image.img_to_array(image)  # Convert to np array
-        image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
-        image = keras_vgg.preprocess_input(image)
-
         # Get and save features
-        feature = vgg.predict(image, verbose=0)
+        feature = model.run_vgg_on_image(vgg, os.path.join(image_dir, name))
         image_id = name.split('.')[0]
         features[image_id] = feature
 
@@ -47,8 +39,6 @@ def prepare_image_data(image_dir):
     # Save features
     with open(C.FEATURES_FILE_PATH, 'wb') as f:
         pickle.dump(features, f)
-
-
 
 
 def load_descriptions(raw_descriptions_file_path):
