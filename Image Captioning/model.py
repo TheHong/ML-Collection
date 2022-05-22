@@ -115,8 +115,12 @@ def run_on_image(nn_head, vgg_backbone, tokenizer, image_path, max_length=34):
 
 
 if __name__ == "__main__":
-    head_model_path = os.path.join(C.MODELS_FOLDER, "captioning_model-ep2.h5")
-    image_path = ""
+    # CHANGE before you run =======================
+    # Specify which model you want to quickly run
+    head_model_path = os.path.join(C.MODELS_FOLDER, "image_captioning_model-ep15.h5")
+    # Put images on which you want to run the model in the "data" directory
+    image_paths = [os.path.join("data", f) for f in os.listdir("data") if f.lower().endswith(".jpg")]
+    # ====================================
 
     # Load the NN components
     print("\nLOADING COMPONENTS =======================\n")
@@ -124,20 +128,19 @@ if __name__ == "__main__":
     backbone = get_vgg_model()
     tokenizer = get_tokenizer()
 
-    # Run the model
-    print("\nRUNNING THE MODEL ===============================\n")
-    raw_result = run_on_image(head, backbone, tokenizer, image_path)
-    result = helpers.get_description_from_output(raw_result)
-    print(f"RESULT '{result}'")
+    for image_path in image_paths:
+        # Run the model
+        print(f"\nRUNNING THE MODEL on {image_path}===============================\n")
+        raw_result = run_on_image(head, backbone, tokenizer, image_path)
+        print(f"RAW RESULT '{raw_result}'")
+        result = helpers.get_description_from_output(raw_result)
+        print(f"RESULT '{result}'")
 
-    # Display results
-    plt.imshow(plt.imread(image_path))
-    plt.axis('off')
-    plt.title(result)
-    plt.show()
-
-
-
+        # Display results
+        plt.imshow(plt.imread(image_path))
+        plt.axis('off')
+        plt.title(result)
+        plt.show()
 
     # Testing the get_model function
     # get_model(7579, 34)

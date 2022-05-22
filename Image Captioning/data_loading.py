@@ -1,3 +1,4 @@
+import os
 import pickle
 
 import helpers
@@ -25,6 +26,8 @@ def get_ds_info(ds_names_file_path, verbose=False, save_tokenizer=True):
     # Create tokenizer
     tokenizer = helpers.create_tokenizer(descriptions)
     if save_tokenizer:
+        if not os.path.isdir(os.path.dirname(C.TOKENIZER_PATH)):
+            os.makedirs(os.path.dirname(C.TOKENIZER_PATH))
         with open(C.TOKENIZER_PATH, 'wb') as f:
             pickle.dump(tokenizer, f)
     vocab_size = helpers.get_vocab_size(tokenizer)

@@ -26,17 +26,21 @@ def evaluate_model(model, features, descriptions, tokenizer, max_length):
 
 
 if __name__ == "__main__":
-    model_path = os.path.join(C.MODELS_FOLDER, "captioning_model-ep3.h5")
+    model_path = os.path.join(C.MODELS_FOLDER, "image_captioning_model-ep2.h5")
 
     # Get data
+    print("GET data")
     features, descriptions, _, _, vocab_size = data_loading.get_ds_info(C.tes_names_file_path, verbose=True, save_tokenizer=False)
 
     # Set info from training
+    print("GET tokenizer")
     tokenizer = M.get_tokenizer()
     max_length = 34
 
     # Get model
+    print("load ")
     model = keras_models.load_model(model_path)
 
     # Evaluate model
+    print("eval")
     evaluate_model(model, features, descriptions, tokenizer, max_length)

@@ -15,7 +15,7 @@ def train_with_full_ds_loaded(n_epochs=20):
     model = get_head_model(vocab_size, max_length)
 
     # Define checkpoint callback
-    filepath = os.path.join(C.MODELS_FOLDER, 'captioning_model-ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5')
+    filepath = os.path.join(C.MODELS_FOLDER, 'image_captioning_model-ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5')
     checkpoint = keras_callbacks.ModelCheckpoint(
         filepath, 
         monitor='val_loss', 
@@ -50,7 +50,7 @@ def train_with_generator(n_epochs=20):
         # Use generator for progressive loading
         generator = data_loading.load_data_generator(trs_features, trs_descriptions, tokenizer, max_length, vocab_size)
         model.fit_generator(generator, epochs=1, steps_per_epoch=steps, verbose=1)  # fit for one epoch
-        filepath = os.path.join(C.MODELS_FOLDER, f'captioning_model-ep{i}.h5')
+        filepath = os.path.join(C.MODELS_FOLDER, f'image_captioning_model-ep{i}.h5')
         model.save(filepath)  # Currently saving at each epoch
 
 
