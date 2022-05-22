@@ -43,6 +43,13 @@ Image is fed into feature extraction model, text is fed into the language model,
 1. Run train.py to train.
 1. Run test.py to test OR Run model.py to quickly test (but first specify the model you want to test and include images you want to test).
 
+## Possible Improvements
+Although the model that is presented here is not perfect, it did at least output valid text (even though at times it may not be describing the image at all). The following are some potential improvements that could be done:
+- Using different pre-trained models with which to extract features. Here ,we used VGG16, but Keras also has other models \[[7](#sources)\] such as VGG19, ResNet50, and InceptionV3.
+- Keep track of validation error to prevent overfitting
+- Try out different hyperparameters
+
+
 ## <a name="sources"></a>Sources
 \[1\] https://github.com/jbrownlee/Datasets/releases/tag/Flickr8k
 
@@ -56,6 +63,8 @@ Image Recognition," _ArXiv_, vol. abs/1409.1556, 2015.
 \[5\] https://github.com/jbrownlee/Datasets/releases/download/Flickr8k/Flickr8k_Dataset.zip
 
 \[6\] https://github.com/jbrownlee/Datasets/releases/download/Flickr8k/Flickr8k_text.zip
+
+\[7\] https://keras.io/api/applications/
 
 
 
