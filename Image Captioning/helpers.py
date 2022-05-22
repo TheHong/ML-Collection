@@ -8,8 +8,8 @@ import tensorflow.keras.utils as keras_utils
 import config as C
 
 
-START_TOKEN = "startToken"
-END_TOKEN = "endToken"
+START_TOKEN = "starttoken"
+END_TOKEN = "endtoken"
 
 def load_image_names(image_names_file):
     """ Loads dataset based on the image names given in the image_names_file """
@@ -124,4 +124,6 @@ def word_for_id(integer, tokenizer):
 
 def get_description_from_output(output):
     # Process the description to remove start and end tokens
-    return output.lower().replace(f"{START_TOKEN.lower()} ", "").replace(f" {END_TOKEN.lower()}", "") 
+    start_i = output.index(START_TOKEN) + len(START_TOKEN) + 1
+    end_i = output.index(END_TOKEN) - 1
+    return output[start_i: end_i]
