@@ -3,11 +3,11 @@ import os
 
 # TODO: Change the below accordingly ==========================================
 # Absolute paths
-image_dir = ""
-raw_descriptions_file_path = ""
-trs_names_file_path = "C:\\Users\\kids\\Downloads\\_temp\\Flickr8k_text\\Flickr_8k.trainImages.txt"
-val_names_file_path = "C:\\Users\\kids\\Downloads\\_temp\\Flickr8k_text\\Flickr_8k.devImages.txt"
-tes_names_file_path = "C:\\Users\\kids\\Downloads\\_temp\\Flickr8k_text\\Flickr_8k.testImages.txt"
+image_dir = ""  # Path to "Flickr8k_Dataset\\Flicker8k_Dataset"
+raw_descriptions_file_path = ""  # Path to "Flickr8k_text\\Flickr8k.token.txt"
+trs_names_file_path = ""  # Path to "Flickr8k_text\\Flickr_8k.trainImages.txt"
+val_names_file_path = ""  # Path to "Flickr8k_text\\Flickr_8k.devImages.txt"
+tes_names_file_path = ""  # Path to "Flickr8k_text\\Flickr_8k.testImages.txt"
 # =============================================================================
 
 DATA_FOLDER = "data"

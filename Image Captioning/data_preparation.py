@@ -122,8 +122,6 @@ def prepare_text_data(raw_descriptions_file_path):
 
 
 if __name__ == "__main__":
-
-
     if not os.path.isdir(C.DATA_FOLDER):
         os.makedirs(C.DATA_FOLDER)
 
